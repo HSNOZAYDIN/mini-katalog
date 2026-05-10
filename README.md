@@ -13,16 +13,15 @@ Bu proje, Flutter ile mobil uygulama geliştirme temellerini öğrenmek amacıyl
 - **Dış Paketler:** Sadece `http: ^1.2.1` kullanılmıştır.
 
 ## Çalıştırma Adımları
-Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları izleyebilirsiniz:
 
-1. Terminali açın ve projeyi bilgisayarınıza klonlayın:
-   ```bash
-   git clone https://github.com/HSNOZAYDIN/mini-katalog.git
-   cd mini_katalog
-   flutter pub get
-   flutter run
+```bash
+git clone https://github.com/HSNOZAYDIN/mini-katalog.git
+cd mini_katalog
+flutter pub get
+flutter run
+```
 
-   Projenin Görüntüleri:
+## Projenin Görüntüleri
 
 
    <img width="493" height="801" alt="Ekran görüntüsü 2026-05-10 215249" src="https://github.com/user-attachments/assets/3344cd85-6088-4889-8eef-379f20ccd1dd" />
