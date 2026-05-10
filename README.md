@@ -17,14 +17,10 @@ Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları i
 
 1. Terminali açın ve projeyi bilgisayarınıza klonlayın:
    ```bash
-   git clone [https://github.com/HSNOZAYDIN/mini-katalog.git](https://github.com/HSNOZAYDIN/mini-katalog.git)
-
+   git clone https://github.com/HSNOZAYDIN/mini-katalog.git
    cd mini_katalog
-
    flutter pub get
-
    flutter run
-   '''
 
    Projenin Görüntüleri:
 
