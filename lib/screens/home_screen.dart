@@ -13,11 +13,33 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Product>> _productsFuture;
+  List<Product> _allProducts = [];
+  List<Product> _filteredProducts = [];
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _productsFuture = ProductService().fetchProducts();
+    _searchController.addListener(_filterProducts);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterProducts() {
+    final query = _searchController.text.toLowerCase();
+    if (_allProducts.isEmpty) return;
+
+    setState(() {
+      _filteredProducts = _allProducts.where((product) {
+        return product.title.toLowerCase().contains(query) ||
+               product.description.toLowerCase().contains(query);
+      }).toList();
+    });
   }
 
   @override
@@ -54,13 +76,22 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
 
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text('No products found'),
-            );
-          }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+            child: Text('No products found'),
+          );
+        }
 
-          final products = snapshot.data!;
+        _allProducts = snapshot.data!;
+        _filteredProducts = _searchController.text.isEmpty 
+            ? _allProducts 
+            : _filteredProducts;
+
+        if (_searchController.text.isNotEmpty && _filteredProducts.isEmpty) {
+          return const Center(
+            child: Text('No products found matching your search'),
+          );
+        }
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -77,14 +108,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       )
                     ],
                   ),
-                  child: const TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search products',
-                      prefixIcon: Icon(Icons.search),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(vertical: 15),
-                    ),
-                  ),
+            child: TextField(
+              controller: _searchController,
+              decoration: const InputDecoration(
+                hintText: 'Search products',
+                prefixIcon: Icon(Icons.search),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(vertical: 15),
+              ),
+            ),
                 ),
 
                 const SizedBox(height: 20),
@@ -111,17 +143,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 20),
 
                 Expanded(
-                  child: GridView.builder(
-                    itemCount: products.length,
-                    gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.75,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                    ),
-                    itemBuilder: (context, index) {
-                      final product = products[index];
+        child: GridView.builder(
+          itemCount: _searchController.text.isEmpty ? _allProducts.length : _filteredProducts.length,
+          gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.75,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+          ),
+          itemBuilder: (context, index) {
+            final product = _searchController.text.isEmpty 
+                ? _allProducts[index] 
+                : _filteredProducts[index];
 
                       return GestureDetector(
                         onTap: () {
